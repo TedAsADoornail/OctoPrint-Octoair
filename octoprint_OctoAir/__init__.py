@@ -23,7 +23,7 @@ class OctoAirPlugin(octoprint.plugin.StartupPlugin,
         self.i2c = busio.I2C(board.SCL, board.SDA, frequency=100000)
         self.sgp30 = adafruit_sgp30.Adafruit_SGP30(self.i2c)
         self.sgp30.iaq_init()
-        self.sgp30.iaq_baseline(0x8973, 0x8AAE)
+        self.sgp30.set_iaq_baseline(0x8973, 0x8AAE)
 
     def on_after_startup(self):
         self._logger.info("OctoAir running!")
