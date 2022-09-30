@@ -14,6 +14,7 @@ class OctoAirPlugin(octoprint.plugin.StartupPlugin,
                     octoprint.plugin.TemplatePlugin,
                     octoprint.plugin.SettingsPlugin,
                     octoprint.plugin.AssetPlugin):
+    rpi_inputs = []
     def __init__(self):
         octoprint.plugin.StartupPlugin.__init__(self)
         octoprint.plugin.TemplatePlugin.__init__(self)
@@ -58,7 +59,6 @@ class OctoAirPlugin(octoprint.plugin.StartupPlugin,
         try:
             pm25_data = self.pm25.read()
             pm25_types = {"pm10 standard", "pm25 standard", "pm100 standard", "pm10 env", "pm25 env", "pm100 env", "particles 03um", "particles 05um", "particles 10um", "particles 25um", "particles 50um", "particles 100um"}
-            sgp30_types = {self.sgp30.TVOC, self.sgp30.eCO2}
             for pm25_type in pm25_types:
                 inputs.append(dict(index_id=pm25_type, label="PM25", State=pm25_data[pm25_type]))
             inputs.append(dict(index_id="SGP30_TVOC", label="SGP30", State=self.sgp30.TVOC))
