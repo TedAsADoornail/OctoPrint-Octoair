@@ -20,6 +20,17 @@ $(function() {
         self.bindFromSettings = function() {
             self.rpi_inputs(self.settingsViewModel.settings.plugins.enclosure.rpi_inputs());
         }
+
+        self.addRpiInput = function () {
+            var arrRelaysLength = self.settingsViewModel.settings.plugins.enclosure.rpi_inputs().length;
+
+            var nextIndex = arrRelaysLength == 0 ? 1 : self.settingsViewModel.settings.plugins.enclosure.rpi_inputs()[arrRelaysLength - 1].index_id() + 1;
+
+            self.settingsViewModel.settings.plugins.enclosure.rpi_inputs.push({
+                index_id: ko.observable("Index"),
+                label: ko.observable("Input")
+            });
+        };
     }
 
     // This is how our plugin registers itself with the application, by adding some configuration
