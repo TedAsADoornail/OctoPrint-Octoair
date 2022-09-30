@@ -1,10 +1,12 @@
 import octoprint.plugin
 from octoprint.util import RepeatedTimer
 import time
+import adafruit_sgp30
 import board
 import busio
+from flask import Response
+import json
 import serial
-import adafruit_sgp30
 from adafruit_pm25.uart import PM25_UART
 
 
@@ -49,31 +51,21 @@ class OctoAirPlugin(octoprint.plugin.StartupPlugin,
         self._check_temp_timer = RepeatedTimer(10, self.read_air_sensors)
         self._check_temp_timer.start()
 
+    # ~~ Blueprintplugin mixin
+    @octoprint.plugin.BlueprintPlugin.route("/inputs", methods=["GET"])
     def read_air_sensors(self):
+        inputs = []
         try:
             pm25_data = self.pm25.read()
-            print()
-            print("Concentration Units (standard)")
-            print("---------------------------------------")
-            print(
-                "PM 1.0: %d\tPM2.5: %d\tPM10: %d" % (pm25_data["pm10 standard"], pm25_data["pm25 standard"], pm25_data["pm100 standard"])
-                )
-            print("Concentration Units (environmental)")
-            print("---------------------------------------")
-            print("PM 1.0: %d\tPM2.5: %d\tPM10: %d" % (pm25_data["pm10 env"], pm25_data["pm25 env"], pm25_data["pm100 env"]))
-            print("---------------------------------------")
-            print("Particles > 0.3um / 0.1L air:", pm25_data["particles 03um"])
-            print("Particles > 0.5um / 0.1L air:", pm25_data["particles 05um"])
-            print("Particles > 1.0um / 0.1L air:", pm25_data["particles 10um"])
-            print("Particles > 2.5um / 0.1L air:", pm25_data["particles 25um"])
-            print("Particles > 5.0um / 0.1L air:", pm25_data["particles 50um"])
-            print("Particles > 10 um / 0.1L air:", pm25_data["particles 100um"])
-            print("---------------------------------------")
-
+            pm25_types = {"pm10 standard", "pm25 standard", "pm100 standard", "pm10 env", "pm25 env", "pm100 env", "particles 03um", "particles 05um", "particles 10um", "particles 25um", "particles 50um", "particles 100um"}
+            sgp30_types = {self.sgp30.TVOC, self.sgp30.eCO2}
+            for pm25_type in pm25_types:
+                inputs.append(dict(index_id=pm25_type, label="PM25", State=pm25_data[pm25_type]))
+            inputs.append(dict(index_id="SGP30_TVOC", label="SGP30", State=self.sgp30.TVOC))
+            inputs.append(dict(index_id="SGP30_eCO2", label="SGP30", State=self.sgp30.eCO2))
         except RuntimeError:
             print("Unable to read from PM25 sensor")
-
-        print("eCO2 = %d ppm \t TVOC = %d ppb" % (self.sgp30.eCO2, self.sgp30.TVOC))
+        return Response(json.dumps(inputs), mimetype='application/json')
 
 
 __plugin_name__ = "Hello World"
