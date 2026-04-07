@@ -1,7 +1,11 @@
-# OctoPrint-Octoair
-
-Octoair is a real-time air quality monitoring system for 3D printing enclosures.
-It utilizes PM2.5 and SGP30 sensors on OctoPi, ensuring safety by filtering out microplastics and volatile chemicals before user exposure.
+## OctoAir Plugin
+OctoAir is an OctoPrint plugin designed to enhance the monitoring and management of Raspberry Pi-connected environmental sensors within your 3D printer enclosure. The plugin integrates with the OctoPrint UI, allowing users to view and manage a list of Raspberry Pi input sensors, including particulate matter (PM2.5) sensors.
+Features
+•	Displays and manages a list of Raspberry Pi input sensors configured in the OctoPrint Enclosure plugin.
+•	Filters and highlights PM2.5 (particles 2.5μm) sensors for air quality monitoring.
+•	Allows users to add new Raspberry Pi input sensors directly from the OctoPrint interface.
+•	Seamlessly integrates with the OctoPrint settings system for persistent configuration.
+This plugin is ideal for users who want to monitor air quality and other environmental parameters inside their 3D printer enclosure using Raspberry Pi-connected sensors.
 
 ## Setup
 
